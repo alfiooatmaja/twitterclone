@@ -2,17 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_clone/apis/auth_api.dart';
 import 'package:twitter_clone/core/core.dart';
+import 'package:appwrite/models.dart' as model;
 import 'package:twitter_clone/features/home/view/home_view.dart';
 
 final authControllerProvider =
+final currentUserAccountProvider = FutureProvider((ref) {
+  final authController = ref.watch(authControllerProvider.notifier);
+  return authController.currentUser();
     StateNotifierProvider<AuthController, bool>((ref) {
   return AuthController(
     authAPI: ref.watch(authAPIProvider),
   );
 });
 
+
 class AuthController extends StateNotifier<bool> {
   final AuthAPI _authAPI;
+  Future<model.Account?> currentUser() => _authAPI.currentUserAccount();
   AuthController({required AuthAPI authAPI})
       : _authAPI = authAPI,
         super(false);
