@@ -5,3 +5,9 @@ void showSnackbar(BuildContext context, String message) {
     content: Text(message),
   ));
 }
+
+String getNameFrom(String email) {
+  //alfiooatmaja@gmail.com
+  //List = [alfiooatmaja@gmail.com]
+  return email.split('@')[0];
+}

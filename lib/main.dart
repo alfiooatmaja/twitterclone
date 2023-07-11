@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Twitter Clone',
       theme: AppTheme.theme,
       home: const LoginView(),
       home: ref.watch(currentUserAccountProvider).when(
