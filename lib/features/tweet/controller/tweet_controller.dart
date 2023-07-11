@@ -18,6 +18,11 @@ final tweetControllerProvider =
   );
 });
 
+final getTweetsProvider = FutureProvider((ref){
+  final TweetController = ref.watch(tweetControllerProvider.notifier);
+  return TweetController.getTweets();
+});
+
 class TweetController extends StateNotifier<bool> {
   final TweetAPI _tweetAPI;
   final StorageAPI _storageAPI;
@@ -30,6 +35,11 @@ class TweetController extends StateNotifier<bool> {
         _tweetAPI = tweetAPI,
         _storageAPI = storageAPI,
         super(false);
+
+  Future<List<Tweet>> getTweets() async {
+    final tweet_list = await _tweetAPI.getTweets();
+    return tweet_list.map((tweet) => Tweet.fromMap(tweet.data)).toList();
+  }
 
   void shareTweet({
     required List<File> images,
