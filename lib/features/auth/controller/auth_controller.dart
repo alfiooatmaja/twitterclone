@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:twitter_clone/apis/auth_api.dart';
 import 'package:twitter_clone/core/core.dart';
+import 'package:twitter_clone/features/home/view/home_view.dart';
 
 final authControllerProvider =
     StateNotifierProvider<AuthController, bool>((ref) {
@@ -46,10 +47,8 @@ class AuthController extends StateNotifier<bool> {
     );
     state = false;
     res.fold(
-      (l) {
-        showSnackbar(context, l.message);
-      },
-      (r) => print(r.userId),
+      (l) => showSnackbar(context, l.message),
+      (r) => Navigator.push(context, HomeView.route()),
     );
   }
 }
