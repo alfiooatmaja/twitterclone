@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:twitter_clone/constants/assets_constants.dart';
 import 'package:twitter_clone/constants/ui_constants.dart';
+import 'package:twitter_clone/features/tweet/views/create_tweet_view.dart';
 import 'package:twitter_clone/theme/pallete.dart';
 
 class HomeView extends StatefulWidget {
@@ -20,10 +21,14 @@ class _HomeViewState extends State<HomeView> {
   int _page = 0;
   final appBar = UIConstants.appBar();
 
-  void onPageChange(int index){
+  void onPageChange(int index) {
     setState(() {
       _page = index;
     });
+  }
+
+  onCreateTweet() {
+    Navigator.push(context, CreateTweetScreen.route());
   }
 
   @override
@@ -35,7 +40,7 @@ class _HomeViewState extends State<HomeView> {
         children: UIConstants.bottomTabBarPages,
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: onCreateTweet,
         child: const Icon(
           Icons.add,
           color: Pallete.whiteColor,
@@ -50,22 +55,22 @@ class _HomeViewState extends State<HomeView> {
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               _page == 0
-                ? AssetsConstants.homeFilledIcon 
-                : AssetsConstants.homeOutlinedIcon,
+                 ? AssetsConstants.homeFilledIcon 
+                 : AssetsConstants.homeOutlinedIcon,
               color: Pallete.whiteColor,
             ),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
-               AssetsConstants.searchIcon,
+              AssetsConstants.searchIcon,
               color: Pallete.whiteColor,
             ),
           ),
           BottomNavigationBarItem(
             icon: SvgPicture.asset(
               _page == 2
-                ? AssetsConstants.notifFilledIcon
-                : AssetsConstants.notifOutlinedIcon,
+                 ? AssetsConstants.notifFilledIcon
+                 : AssetsConstants.notifOutlinedIcon,
               color: Pallete.whiteColor,
             ),
           ),

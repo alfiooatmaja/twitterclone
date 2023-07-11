@@ -1,10 +1,10 @@
+// ignore_for_file: override_on_non_overriding_member
 import 'package:appwrite/appwrite.dart';
 import 'package:appwrite/models.dart' as model;
-import 'package:fpdart/fpdart.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fpdart/fpdart.dart';
 
 import '../core/core.dart';
-import '../core/providers.dart';
 
 final authAPIProvider = Provider((ref) {
   final account = ref.watch(appwriteAccountProvider);
@@ -12,35 +12,30 @@ final authAPIProvider = Provider((ref) {
 });
 
 abstract class IAuthAPI {
-  FutureEither<model.User> signUp({
-  Future<model.Account?> currentUserAccount();  
+  FutureEither<model.Account> signUp({
     required String email,
     required String password,
   });
-
-  FutureEither<model.Session> login({
-    required String email,
-    required String password,
-  });
+  Future<model.Account?> currentUserAccount();
 }
 
 class AuthAPI implements IAuthAPI {
   final Account _account;
   AuthAPI({required Account account}) : _account = account;
-
+ 
   @override
   Future<model.Account?> currentUserAccount() async {
     try {
       return await _account.get();
-    } on AppwriteException catch (e) {
+    } on AppwriteException {
       return null;
     } catch (e) {
       return null;
     }
   }
-
+ 
   @override
-  FutureEither<model.User> signUp(
+  FutureEither<model.Account> signUp(
       {required String email, required String password}) async {
     try {
       final account = await _account.create(
@@ -59,7 +54,7 @@ class AuthAPI implements IAuthAPI {
       );
     }
   }
-
+  
   @override
   FutureEither<model.Session> login(
       {required String email, required String password}) async {
