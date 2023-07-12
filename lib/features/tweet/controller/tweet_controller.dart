@@ -8,6 +8,7 @@ import 'package:twitter_clone/core/core.dart';
 import 'package:twitter_clone/core/emuns/tweet_type_enum.dart';
 import 'package:twitter_clone/features/auth/controller/auth_controller.dart';
 import 'package:twitter_clone/models/tweet_model.dart';
+import 'package:twitter_clone/models/user_model.dart';
 
 final tweetControllerProvider =
     StateNotifierProvider<TweetController, bool>((ref) {
@@ -46,6 +47,22 @@ class TweetController extends StateNotifier<bool> {
     return tweet_list.map((tweet) => Tweet.fromMap(tweet.data)).toList();
   }
 
+  void likeTweet(Tweet tweet, UserModel user) async {
+    List<String> likes = tweet.likes;
+
+    if (tweet.likes.contains(user.uid)) {
+      likes.remove(user.uid);
+    } else {
+      likes.add(user.uid);
+    }
+
+    tweet = tweet.copyWith(
+      likes: likes,
+    );
+    final res = await _tweetAPI.likeTweet(tweet);
+    res.fold((l) => null, (r) => null);
+  }
+
   void shareTweet({
     required List<File> images,
     required String text,
@@ -56,9 +73,10 @@ class TweetController extends StateNotifier<bool> {
       return;
     }
     if (images.isNotEmpty) {
-      _shareImageTweet(images: images, 
-      text: text, 
-      context: context,
+      _shareImageTweet(
+        images: images, 
+        text: text, 
+        context: context,
       );
       } else {
       _shareTextTweet(
