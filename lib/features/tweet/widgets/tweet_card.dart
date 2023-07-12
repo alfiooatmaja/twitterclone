@@ -21,9 +21,9 @@ class TweetCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-     final curretUser = ref.watch(currentUserDetailsProvider).value;
+     final currentUser = ref.watch(currentUserDetailsProvider).value;
 
-    return curretUser == null
+    return currentUser == null
         ? const SizedBox()
         : ref.watch(userDetailsProvider(tweet.uid)).when(
               data: (user) {
@@ -45,6 +45,25 @@ class TweetCard extends ConsumerWidget {
                             children: [
                                Row(
                                 children: [
+                                  if(tweet.retweetedBy.isNotEmpty)
+                                Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      AssetsConstants.retweetIcon,
+                                      color: Pallete.greyColor,
+                                      height: 20,
+                                    ),
+                                    const SizedBox(width: 2),
+                                    Text(
+                                      '${tweet.retweetedBy} retweeted',
+                                      style: const TextStyle(
+                                        color: Pallete.greyColor,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                                   Container(
                                     margin: const EdgeInsets.only(right: 5),
                                     child: Text(
@@ -100,7 +119,13 @@ class TweetCard extends ConsumerWidget {
                                     TweetIconButton(
                                         pathName: AssetsConstants.retweetIcon,
                                         text: tweet.reshareCount.toString(),
-                                        onTap: () {}),
+                                         onTap: () {
+                                          ref
+                                              .read(tweetControllerProvider
+                                                  .notifier)
+                                              .reshareTweet(
+                                                  tweet, currentUser, context); 
+                                        }),
                                     LikeButton(
                                       size: 25,
                                       onTap: (isLiked) async {
@@ -109,11 +134,12 @@ class TweetCard extends ConsumerWidget {
                                                 .notifier)
                                             .likeTweet(
                                               tweet,
-                                              curretUser,
+                                              currentUser,
                                             );
                                         return !isLiked;
                                       },
-                                      isLiked: tweet.likes.contains(curretUser.uid),
+                                      isLiked: 
+                                          tweet.likes.contains(currentUser.uid),
                                       likeBuilder: (isLiked) {
                                         return isLiked
                                             ? SvgPicture.asset(
